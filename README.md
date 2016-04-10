@@ -1,16 +1,52 @@
-#GRBL-Jogger
+![GitHub Logo](http://www.heise.de/make/icons/make_logo.png)
 
-###Schrittmotor-Controller mit ATmega644 und Jogpad
+Maker Media GmbH und c't, Heise Zeitschriften Verlag
 
-GRBL-kompatible Platine mit manueller Steuerung über Jogpad, Anschlussmöglichkeit für [TFT-Maximite BASIC-Panel-Computer](http://www.segor.de/#/bauteilesaetze-a-module/bauteilesaetze/ct-tft-maximite), LPT-Buchse zum Anschluss chinesischer und Langenfeld-kompatibler Schrittmotor-Endstufen
+***
 
-Fertige Leerplatinen können Sie im **[c't Eurocircuits-Shop](http://ct.eurocircuits.de)** bestellen.
+#Grbl 0.9j/jog
 
-* **PCB** Platinen-Layouts im Gerber/Excellon-Format sowie Layouts, Schaltplan, Bestückungsplan, Abmessungen als PDF 
-* **BAS** Beispiel-Programme (GCode-Sender) für TFT Maximite
-* **AVR** GRBL-Sourcen und HEX-File für ATmega644, Default-Parameter angepasst für [c't Hacks Holzfräse](https://github.com/heise/WOODMILL). Bei Verwendung eines ATmega644P ist ein hierfür kompiliertes HEX-File nötig!
-* **PartsList.txt** Stückliste elektronische Bauteile
+Update fÃ¼r GRBLize CNC-Steuerung aus c't Hacks/Make: 4/2014
 
-Zum Ansehen der PDFs "View raw" anklicken und downloaden. Bitte beachten Sie unbedingt den Artikel in **[c't Hacks 1/2014](http://heise.de/-2109420)**.
+- Angepasst auf GRBL Version 0.9j
+- Standard-Format der Statusmeldung und Befehlsverarbeitung wie im offiziellen Grbl-Build 
+- Jog-Routinen nun Interrupt-gesteuert, keine StÃ¶rungen des Motorlaufs
+- stark verbesserte Performance
+- Beschleunigungswerte und und Seek-Geschwindigkeit fÃ¼r jede Achse getrennt einstellbar
+- keine Z-Skalierung mehr erforderlich bei der Make: SperrholzfrÃ¤se
+- Schnittstelle jetzt 115200 Bd, 8n1
+- Z-Probe-Eingang ist Pin 5 (PB4, SPI SS) des ATmega644. Dieser Eingang ist an PL7 (ISP) Pin 3 zugÃ¤nglich. FÃ¼r erhÃ¶hte StÃ¶rsicherheit sollte ein Pull-up-Widerstand 4k7 nach +5V und ggf. ein Eingangsfilter wie an den anderen Schalter-EingÃ¤ngen vorgesehen werden. Eine Ã¼berarbeitete GRBL-JOG-Platine ist in Planung.
 
-Unser Leser Tom Martin hat freundlicherweise einen **[Reichelt-Warenkorb](https://secure.reichelt.de/index.html?&ACTION=20&AWKID=875060&PROVID=2084)** zusammengestellt. Evt. passt die DC-Buchse nicht perfekt; wir hatten unser Muster von Segor (Bestellnr: DCBU 2,1-PR) bezogen. Anmerkung: Der Heise Zeitschriften Verlag steht weder mit Reichelt, Eurocircuits noch mit Segor in einer Provisions- oder Geschäftsbeziehung, die über das Bereitstellen der Fertigungsdaten hinausgeht.
+
+#Grbl 0.8c/jog.2 
+
+- Default-Parameter angepasst fÃ¼r CNC-FrÃ¤se aus Alu (c't Hacks 1/2013 mit TR12x6 Spindeln, grbl_alum.hex) 
+- Default-Parameter angepasst fÃ¼r CNC-FrÃ¤se aus Multiplex-Holz mit Zahnriemen (c't Hacks 1/2014, grbl_wood.hex). Bitte Flash-Batch entsprechend Dateinamen anpassen.
+- Bugfix Homing- und Jogging-Richtungen
+- Parameter fÃ¼r invertiertes Enable-Signal eingefÃ¼hrt, war vorher ein C-Define in config.h
+- Parameter Stepper-Port-Invertierung geÃ¤ndert auf Limit-Switch-Invertierung, bei falscher Drehrichtung eines Schrittmotors ist stattdessen eine der beiden Motorwicklungen umzupolen.
+
+Bei Verwendung eines ATmega644 statt ATmega644P ist das Makefile anzupassen und die Firmware mit WinAVR/GCC-AVR neu zu 
+kompilieren.
+
+***
+
+#Schrittmotortreiber
+
+Bitte beachten Sie, dass bei einigen chinesischen Schrittmotortreibern die Belegungen der XYZ-Step/Direction-Pins 
+vertauscht sind. Auf der GRBL-Jogger-Platine sind dann die Leiterbahnen unter den Pfostenleisten PL9 und 10 
+aufzutrennen und die Verbindungen mit Jumper-Kabeln in der richtigen Reihenfolge herzustellen. AuÃŸerdem erwarten einige 
+chinesische Schrittmotortreiber das Enable-Signal auf Pin 16 des D-Sub-Stecker und nicht auf Pin 1. Es dÃ¼rfen dann die 
+Jumper JP4 bis JP6 nicht gesteckt werden, stattdessen ist die Verbindung Ã¼ber ein Jumper-Kabel zwischen PL9 Pin 1 und 
+PL10 Pin 16 herzustellen.
+
+Dokumentationen zu verschiedenen Treiberkarten finden Sie im **[TB6560-BOARDS-Repository](https://github.com/heise/TB6560-BOARDS)**. 
+
+Ein sehr komfortables Steuerprogramm mit HPGL- und Excellon-Import, Webcam-UnterstÃ¼tzung, Preview und 
+CAM-Funktionen finden Sie in unserem **[GRBLize-Repository](https://github.com/heise/GRBLize)**. 
+
+Carsten Meyer, Redaktion Make Deutschland (cm@ct.de)
+
+**Achtung:** Einige CAM-Programme liefern invertierte Z-Werte (positive Z-Werte im WerkstÃ¼ck) - ggf. Z-Skalierung oder Schrittmotor- und Homing-Richtung in GRBL-Port-Invertierungsparametern Ã¤ndern:
+
+Bitte beachten Sie unbedingt den Artikel in **[c't Hacks 1/2014](http://heise.de/-2109420)**.
